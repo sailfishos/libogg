@@ -3,8 +3,9 @@ Summary:    The Ogg bitstream file format library
 Version:    1.3.5
 Release:    1
 License:    BSD
-URL:        https://www.xiph.org/
+URL:        https://github.com/sailfishos/libogg
 Source0:    %{name}-%{version}.tar.bz2
+Patch1:     0001-Update-minimum-cmake-version-from-3.0-to-3.6.patch
 BuildRequires: cmake
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -35,31 +36,24 @@ Documentation for developing applications with libogg
 
 
 %prep
-%autosetup -n %{name}-%{version}/%{name}
+%autosetup -p1 -n %{name}-%{version}/%{name}
 
 %build
-mkdir -p build
-pushd build
-%cmake -DBUILD_SHARED_LIBS=1 ..
-%make_build
-popd
+%cmake -DBUILD_SHARED_LIBS=1
+%cmake_build
 
 %install
-pushd build
-%make_install
-popd
+%cmake_install
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %license COPYING
 %{_libdir}/libogg.so.*
 
 %files devel
-%defattr(-,root,root,-)
 %doc AUTHORS CHANGES README.md
 %dir %{_includedir}/ogg
 %{_includedir}/ogg/ogg.h
@@ -70,5 +64,4 @@ popd
 %{_libdir}/pkgconfig/ogg.pc
 
 %files doc
-%defattr(-,root,root,-)
 %{_docdir}/%{name}
